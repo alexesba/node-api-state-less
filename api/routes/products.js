@@ -3,20 +3,45 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/product');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) =>  {
+    cb(null, './uploads');
+  },
+  filename: (req, file, cb) => {
+    const timestamp = new Date().toISOString();
+    cb(null, `${timestamp}-${file.originalname}`);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if (['image/jpeg', 'image/png'].includes(file.mimetype)) {
+   cb(null, true); //save the file
+  } else {
+    cb(null, false); // not save the file
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter
+});
 
 router.get('/', (req, res) =>{
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   Product.find()
-    .select('name price _id')
+    .select('name price _id productImage')
     .exec()
     .then(products => {
       res.status(200).json({
         count: products.length,
-        products: products.map(({name, _id, price}) => {
+        products: products.map(({name, _id, price, productImage}) => {
           return {
             name,
             _id,
             price,
+            productImage,
             request: {
               type: 'GET',
               url: `${url}/${_id}`
@@ -29,15 +54,16 @@ router.get('/', (req, res) =>{
   });
 });
 
-router.post('/', (req, res) =>{
+router.post('/', upload.single('productImage'), (req, res) =>{
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   const { name, description, price } = req.body;
-
+  const { path: productImage } = req.file;
   const product = Product({
     _id: mongoose.Types.ObjectId(),
     name,
     description,
-    price
+    price,
+    productImage
   });
 
   product.save().then( result => {
