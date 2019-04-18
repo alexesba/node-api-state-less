@@ -14,6 +14,28 @@ router.get('/', (req, res, next) =>{
   });
 });
 
+router.post('/', (req, res) =>{
+  const { name, description, price } = req.body;
+
+  const product = Product({
+    _id: mongoose.Types.ObjectId(),
+    name,
+    description,
+    price
+  });
+
+  product.save().then( result => {
+    res.status(200).json({
+      product: result
+    });
+  }).catch(error => {
+    res.status(500).json({
+      error
+    });
+  });
+
+});
+
 router.get('/:productId', (req, res) => {
   const { productId }  = req.params
   Product.findById(productId)
@@ -51,28 +73,6 @@ router.delete('/:productId', (req, res) =>{
     }).catch(error => {
       res.status(500).json({error});
     });
-});
-
-router.post('/', (req, res) =>{
-  const { name, description, price } = req.body;
-
-  const product = Product({
-    _id: mongoose.Types.ObjectId(),
-    name,
-    description,
-    price
-  });
-
-  product.save().then( result => {
-    res.status(200).json({
-      product: result
-    });
-  }).catch(error => {
-    res.status(500).json({
-      error
-    });
-  });
-
 });
 
 module.exports = router;
