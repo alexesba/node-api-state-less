@@ -4,13 +4,11 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/product');
 
-router.get('/', (req, res, next) =>{
+router.get('/', (req, res) =>{
   Product.find().exec().then(products => {
     res.status(200).json(products);
-    next();
   }).catch(error => {
     res.status(500).json({ error });
-    next();
   });
 });
 
