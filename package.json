@@ -15,10 +15,13 @@
   "author": "alexesba@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "mongoose": "^5.5.2",
     "morgan": "^1.9.1"
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
     "nodemon": "^1.18.11"
   }
 }

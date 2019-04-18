@@ -6,21 +6,27 @@ router.get('/', (req, res, next) => {
   res.status(200).json({
     message: 'Orders were fetched'
   });
+  next();
 });
 
 router.post('/', (req, res, next) => {
+  const { productId, quantity } = req.body
+  const order  = { productId, quantity };
   res.status(200).json({
-    message: 'Order was created'
+    message: 'Order was created',
+    order,
   });
+  next();
 });
 
-router.post('/:orderId', (req, res, next) => {
+router.get('/:orderId', (req, res, next) => {
   const { orderId } = req.params;
 
   res.status(200).json({
     message: 'Order details',
     orderId,
   });
+  next();
 });
 
 router.delete('/:orderId', (req, res, next) => {
@@ -30,6 +36,7 @@ router.delete('/:orderId', (req, res, next) => {
     message: 'Order deleted',
     orderId,
   });
+  next();
 });
 
 module.exports = router;
