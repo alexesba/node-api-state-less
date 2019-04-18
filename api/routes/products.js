@@ -9,7 +9,6 @@ router.get('/', (req, res, next) =>{
     res.status(200).json(products);
     next();
   }).catch(error => {
-    console.log(error);
     res.status(500).json({ error });
     next();
   });
@@ -36,10 +35,8 @@ router.patch('/:productId', (req, res) =>{
 
   Product.update({ _id }, { $set: updateOpts })
     .then(product => {
-      console.log(product);
       res.status(200).json(product);
   }).catch(error =>{
-    console.log(error);
     res.status(500).json({error});
   });
 
