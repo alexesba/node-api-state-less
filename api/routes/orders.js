@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
     .exec()
     .then(orders => {
       res.status(200).json({
-        count: orders.lenght,
+        count: orders.length,
         orders: orders.map(order => {
           const { _id, product, quantity } = order;
           return {
