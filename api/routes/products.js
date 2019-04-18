@@ -25,7 +25,7 @@ router.post('/', (req, res) =>{
   });
 
   product.save().then( result => {
-    res.status(200).json({
+    res.status(201).json({
       product: result
     });
   }).catch(error => {
