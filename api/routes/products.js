@@ -1,9 +1,10 @@
 const express = require('express');
 
-const router = express.Router();
-const mongoose = require('mongoose');
 const Product = require('../models/product');
+const checkAuth = require('../middleware/check-auth');
+const mongoose = require('mongoose');
 const multer = require('multer');
+const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) =>  {
@@ -54,7 +55,7 @@ router.get('/', (req, res) =>{
   });
 });
 
-router.post('/', upload.single('productImage'), (req, res) =>{
+router.post('/', checkAuth, upload.single('productImage'), (req, res) =>{
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   const { name, description, price } = req.body;
   const { path: productImage } = req.file;
@@ -101,7 +102,7 @@ router.get('/:productId', (req, res) => {
     });
 });
 
-router.patch('/:productId', (req, res) =>{
+router.patch('/:productId', checkAuth, (req, res) =>{
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   const { productId: _id } = req.params;
   const updateOpts = {};
@@ -124,7 +125,7 @@ router.patch('/:productId', (req, res) =>{
 
 });
 
-router.delete('/:productId', (req, res) =>{
+router.delete('/:productId', checkAuth, (req, res) =>{
   const url = req.protocol + '://' + req.get('host') + req.originalUrl;
   const { productId: _id } = req.params;
   Product.remove({_id})
