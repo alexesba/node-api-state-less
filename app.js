@@ -5,9 +5,10 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-const productRoutes = require('./api/routes/products');
-const orderRoutes = require('./api/routes/orders');
-const userRoutes = require('./api/routes/users');
+const productRoutes = require('./backend/api/routes/products');
+const orderRoutes = require('./backend/api/routes/orders');
+const userRoutes = require('./backend/api/routes/users');
+const homeRoute = require('./frontend/routes/home');
 
 mongoose.connect(
 `mongodb+srv://root:${process.env.MONGO_ATLAS_PW}@restful-api-d5jcu.mongodb.net/test?retryWrites=true`,
@@ -16,10 +17,14 @@ mongoose.connect(
   }
 );
 
+app.set('view engine', 'jade');
+app.set('views', `${__dirname}/frontend/views`);
+
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -30,6 +35,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use('/', homeRoute);
 
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
